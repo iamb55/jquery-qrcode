@@ -57,13 +57,61 @@ QRCode.prototype = {
 		this.dataList.push(newData);
 		this.dataCache = null;
 	},
-	
 	isDark : function(row, col) {
 		if (row < 0 || this.moduleCount <= row || col < 0 || this.moduleCount <= col) {
 			throw new Error(row + "," + col);
 		}
 		return this.modules[row][col];
 	},
+
+	drawNumber : function(row, col) {
+	var tempCount = 0;
+	if (this.isDark(row, col))  {
+	    tempCount += 1;
+	}
+	if (col > 0) {
+	    if (this.isDark(row, col -1)) {
+		tempCount += 2;
+	    }
+	}
+	if (row+1 < this.moduleCount) {
+	    if (this.isDark(row+1, col)) {
+		tempCount += 4;
+	    }
+	}
+	if (col+1 < this.moduleCount) {
+	    if (this.isDark(row, col +1)) {
+		tempCount += 8;
+	    }
+	}
+	if (row > 0) {
+	    if (this.isDark(row-1, col)) {
+		tempCount += 16;
+	    }
+	}
+	if (row > 0 && col > 0) {
+	    if (this.isDark(row-1, col-1)) {
+		tempCount += 32;
+	    }
+	}
+	if (row+1 <this.moduleCount && col > 0) {
+	    if (this.isDark(row+1, col-1)) {
+		tempCount += 64;
+	    }
+	}
+	if (row+1 < this.moduleCount && col+1 < this.moduleCount) {
+	    if (this.isDark(row+1, col+1)) {
+		tempCount += 128;
+	    }
+	}
+	if (row > 0 && col+1 < this.moduleCount) {
+	    if (this.isDark(row-1, col+1)) {
+		tempCount += 256;
+	    }
+	}
+      	return tempCount;
+
+    },
 
 	getModuleCount : function() {
 		return this.moduleCount;
